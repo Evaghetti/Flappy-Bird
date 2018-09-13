@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Flappy Bird</title>
+        <script type="text/javascript" src="JS/Flappy.js"></script>
+        <script type="text/javascript" src="JS/Cano.js"></script>
+    </head>
+    <body>
+            <canvas width="640" height="480" id="joao">
+                Seu navegador é chato
+            </canvas>
+
+            <script type="application/javascript">
+                let canvas = document.getElementById("joao");
+                let context = canvas.getContext('2d');
+
+                let larguraCanvas = canvas.offsetWidth;
+                let alturaCanvas  = canvas.offsetHeight;
+
+                function gerarCano(vetCanos, x, alturaCima) {
+                    const distanciaEntreCanos = 125;
+
+                    vetCanos.push(new Cano("Imagens/cano para baixo.png", x, 0, 75, alturaCima, 85));
+                    vetCanos.push(new Cano("Imagens/cano para cima.png", x, alturaCima + distanciaEntreCanos, 75, alturaCanvas - (alturaCima + distanciaEntreCanos), 85));
+                }
+
+                let player = new Flappy(25, alturaCanvas / 2, 25, 25, 200);
+                let canos = [];
+
+                for (let i = 0; i < 5; i++) 
+                    gerarCano(canos, 500 + i * 150, Math.random() * (alturaCanvas / 2) + 25);
+
+                let tempoAntigo = Date.now();
+                
+                setInterval(function() {
+                    context.fillStyle = "grey";
+                    context.fillRect(0, 0, larguraCanvas, alturaCanvas);
+                    
+                    if (player.vivo) {
+                        let tempoAtual = Date.now();
+                        let deltaTime = (tempoAtual - tempoAntigo) / 1000;
+                        tempoAntigo = tempoAtual;
+
+                        for (let i = 0; i < canos.length; i += 2) {
+                            canos[i].update(deltaTime);
+                            canos[i + 1].update(deltaTime);
+
+                            if (canos[i].x + canos[i].largura <= 0) {
+                                let ultimoCanoCima = canos[canos.length - 1], ultimoCanoBaixo = canos[canos.length - 2];
+
+                                canos.splice(i, 2);
+                                gerarCano(canos, ultimoCanoCima.x + 150, Math.random() * (alturaCanvas / 2) + 25);
+                                
+                                i -= 2;
+                            }
+                            else if (player.colidiuCom(canos[i]) || player.colidiuCom(canos[i + 1]))
+                                player.vivo = false;
+                        }
+                        player.update(deltaTime);
+                        
+                        for (let i = 0; i < canos.length; i++)
+                            canos[i].draw(context);
+                        player.draw(context);
+                    }
+                    else {
+                        context.fillStyle = "white";
+
+                        context.fillText("VOCE MORREU", larguraCanvas / 2 - 25, alturaCanvas / 2 - 25);
+                    }
+                }, 1 / 30);
+
+                window.onkeypress = function(tecla) {
+                    player.handleInput(tecla.key);
+                };
+            </script>
+    </body>
+</html>
