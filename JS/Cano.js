@@ -14,6 +14,7 @@ class Cano {
 
     update(deltaTime) {
         this.x -= this.velocidadeHorizontal * deltaTime;
+        return(this.x);
     }
 
     draw(context) {
