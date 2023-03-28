@@ -12,9 +12,8 @@ class Flappy {
     *  @param {number} y
     *  @param {number} altura
     *  @param {number} velocidadeVertical
-    *  @param {number} alturaCanvas
     */
-    constructor(x, y, largura, altura, velocidadeVertical, alturaCanvas) {
+    constructor(x, y, largura, altura, velocidadeVertical) {
         this.x = x;
         this.y = y;
 
@@ -26,7 +25,6 @@ class Flappy {
         
         this.img = new Image();
         this.img.src = "Imagens/flappy.png";
-        this.alturaCanvas = alturaCanvas;
 
         this.vivo = true;
     }
@@ -36,9 +34,8 @@ class Flappy {
      * @param {*} tecla 
      */
     handleInput(tecla) {
-        
+        if (tecla === " ")
             this.velocidadeVertical = -this.velocidadeQuedaMax;
-       
     }
 
     /**
@@ -61,9 +58,7 @@ class Flappy {
     colidiuCom(cano) {
         let horizontal = this.x + this.largura >= cano.x && cano.x + cano.largura >= this.x;
         let vertical   = this.y + this.altura  >= cano.y && cano.y + cano.altura  >= this.y;
-        let cima = this.y <=0;
-        let baixo = this.y + this.altura >= this.alturaCanvas;
-        return (horizontal && vertical)  || (cima) || (baixo);
+        return horizontal && vertical;
     }
 
     /**

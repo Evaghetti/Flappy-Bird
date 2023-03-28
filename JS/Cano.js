@@ -26,12 +26,10 @@ class Cano {
 
     /**
      * Atualiza a posição horizontal do cano
-     * @param {number} deltaTime 
-     * @returns {number}
+     * @param {number} deltaTime
      */
     update(deltaTime) {
         this.x -= this.velocidadeHorizontal * deltaTime;
-        return(this.x);
     }
     /**
      *  Desenha o a imagem do Flappy no canvas

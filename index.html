@@ -6,7 +6,7 @@
     </head>
     <body>
             <!--Janela aonde o jogo ocorre-->
-            <canvas width="600" height="600" id="joao">
+            <canvas width="640" height="480" id="joao">
                 Seu navegador é chato
             </canvas>
 
@@ -15,54 +15,48 @@
                 let canvas = document.getElementById("joao");
                 let context = canvas.getContext('2d');
 
-                let larguraCanvas = canvas.offsetWidth;
-                
+                let larguraCanvas = canvas.offsetWidth;             
                 let alturaCanvas  = canvas.offsetHeight;
-                console.log(alturaCanvas);
                 // CRIA OS CANOS QUE APARECERAM
                 function gerarCano(vetCanos, x, alturaCima) {
-                    const distanciaEntreCanos = 150;
+                    const distanciaEntreCanos = 125;
                     // cria cano de cima
                     vetCanos.push(new Cano("Imagens/cano para baixo.png", x, 0, 75, alturaCima, 85));
                     //cria cano de baixo
                     vetCanos.push(new Cano("Imagens/cano para cima.png", x, alturaCima + distanciaEntreCanos, 75, alturaCanvas - (alturaCima + distanciaEntreCanos), 85));
                 }
 
-                let player = new Flappy(25, alturaCanvas / 2, 25, 25, 200,alturaCanvas);
+                let player = new Flappy(25, alturaCanvas / 2, 25, 25, 200);
                 let canos = [];
                 //for que gera todos os canos utilizados
                 for (let i = 0; i < 5; i++) 
-                    gerarCano(canos, 500 + i * 300, Math.random() * (alturaCanvas / 2) + 25);
+                    gerarCano(canos, 500 + i * 150, Math.random() * (alturaCanvas / 2) + 25);
                 
                 let tempoAntigo = Date.now();
                 
                 setInterval(function() {
                     //define a cor do fundo
-                    context.fillStyle = "black";
+                    context.fillStyle = "grey";
                     // Desenha o fundo
                     context.fillRect(0, 0, larguraCanvas, alturaCanvas);
                     
                     if (player.vivo) {
                         
                         let tempoAtual = Date.now();
-                        let deltaTime = (tempoAtual - tempoAntigo) / 1000;
-                        
+                        let deltaTime = (tempoAtual - tempoAntigo) / 1000;                       
                         tempoAntigo = tempoAtual;
 
-                        for (let i = 0; i < canos.length; i += 2) {
-                            
+                        for (let i = 0; i < canos.length; i += 2) {                           
                             canos[i].update(deltaTime);
-                            
                             canos[i + 1].update(deltaTime);
                             //Verifica se os canos sairam da tela e remove eles
                             if (canos[i].x + canos[i].largura <= 0) {
                                 let ultimoCanoCima = canos[canos.length - 1], ultimoCanoBaixo = canos[canos.length - 2];
 
                                 canos.splice(i, 2);
-                                gerarCano(canos, ultimoCanoCima.x + 300, Math.random() * (alturaCanvas / 2) + 25);
+                                gerarCano(canos, ultimoCanoCima.x + 150, Math.random() * (alturaCanvas / 2) + 25);
                                 
                                 i -= 2;
-                                console.log(i)
                             }
                             else if (player.colidiuCom(canos[i]) || player.colidiuCom(canos[i + 1]))
                                 player.vivo = false;
@@ -82,8 +76,8 @@
                     }
                 }, 1 / 30);
 
-                window.onclick = function() {
-                    player.handleInput();
+                window.onkeypress = function(tecla) {
+                    player.handleInput(tecla.key);
                 };
             </script>
     </body>
