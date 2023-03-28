@@ -1,4 +1,19 @@
+/**
+ * Classe que representa o Flappy(o passarinho)
+ */
+
 class Flappy {
+
+
+
+    /**
+    *  Construtor da classe
+    *  @param {number} x
+    *  @param {number} y
+    *  @param {number} altura
+    *  @param {number} velocidadeVertical
+    *  @param {number} alturaCanvas
+    */
     constructor(x, y, largura, altura, velocidadeVertical, alturaCanvas) {
         this.x = x;
         this.y = y;
@@ -16,12 +31,20 @@ class Flappy {
         this.vivo = true;
     }
 
+    /**
+     * Controla a velocidade de queda do Flappy
+     * @param {*} tecla 
+     */
     handleInput(tecla) {
         
             this.velocidadeVertical = -this.velocidadeQuedaMax;
        
     }
 
+    /**
+     *  Atualiza a velocidade vertical do flap
+     * @param {number} deltaTime 
+     */
     update(deltaTime) {
         this.y += this.velocidadeVertical * deltaTime;
         
@@ -30,6 +53,11 @@ class Flappy {
            
     }
 
+    /**
+     * Verifica se colidou com o cano
+     * @param {*} cano 
+     * @returns {boolean}
+     */
     colidiuCom(cano) {
         let horizontal = this.x + this.largura >= cano.x && cano.x + cano.largura >= this.x;
         let vertical   = this.y + this.altura  >= cano.y && cano.y + cano.altura  >= this.y;
@@ -38,6 +66,10 @@ class Flappy {
         return (horizontal && vertical)  || (cima) || (baixo);
     }
 
+    /**
+     *  Desenha o a imagem do Flappy no canvas
+     * @param {*} context 
+     */
     draw(context) {
         context.drawImage(this.img, this.x, this.y, this.largura, this.altura);
     }
